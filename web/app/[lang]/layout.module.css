@@ -1,0 +1,66 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url(/background_stripes.png);
+  background-position: top left;
+  background-repeat: repeat;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  background-image: url(/background_stripes.png);
+  background-position: top left;
+  background-repeat: repeat;
+  z-index: 10;
+  height: var(--height-header);
+}
+
+.navbar {
+  display: flow-root;
+  background-color: var(--header-color);
+  border-bottom: var(--thick-brown-border);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--max-width);
+  background-color: var(--main-color);
+  margin-inline: auto;
+  flex: 1;
+  width: 100%;
+}
+
+.page-content {
+  flex: 1;
+}
+
+.border {
+  position: fixed;
+  width: var(--max-width);
+  height: 100%;
+  top: var(--height-header);
+  left: calc((100% - var(--max-width)) / 2);
+  border: var(--thick-brown-border);
+  border-bottom: none;
+  z-index: 4;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .header {
+    height: var(--height-header-mobile);
+  }
+
+  .border {
+    top: var(--height-header-mobile);
+  }
+}

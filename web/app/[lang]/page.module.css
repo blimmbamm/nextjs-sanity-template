@@ -1,0 +1,10 @@
+.root {
+  padding-top: 1rem;
+  padding-inline: 2.5rem;
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding-inline: 1rem;
+  }
+}

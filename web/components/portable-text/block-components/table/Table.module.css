@@ -1,0 +1,7 @@
+.root {
+  padding-left: 1rem;
+}
+
+.root td:first-child {
+  padding-right: 2rem;
+}

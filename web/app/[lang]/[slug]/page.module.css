@@ -1,0 +1,13 @@
+.container {
+  padding-inline: 2.5rem;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+  gap: 2.5rem;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding-inline: 1rem;
+  }
+}

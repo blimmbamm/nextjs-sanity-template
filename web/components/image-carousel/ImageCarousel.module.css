@@ -1,0 +1,48 @@
+.root {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  width: 100%;
+  width: fit-content;
+}
+
+.control {
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.control-disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.overflow-hidden-container {
+  overflow: hidden;
+  user-select: none;
+}
+
+.images-container {
+  display: flex;
+  align-items: center;
+}
+
+.image {
+  width: 100%;
+  max-height: 90dvh;
+  max-width: 80dvw;
+  cursor: pointer;
+  padding-right: 6px;
+}
+
+.image-caption {
+  text-align: center;
+  position: fixed;
+  top: 2rem;
+  width: fit-content;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(209, 209, 209);
+}

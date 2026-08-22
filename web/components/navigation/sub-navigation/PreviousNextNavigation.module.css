@@ -1,0 +1,31 @@
+.root {
+  position: sticky;
+  top: var(--height-header);
+  display: flex;
+  z-index: 3;
+  background-color: var(--main-color);
+}
+
+@media (max-width: 767px) {
+  .root {
+    top: var(--height-header-mobile);
+  }
+}
+
+.link {
+  text-decoration: none;
+  line-height: 1;
+  color: inherit;
+  padding: 1.25rem;
+  padding-bottom: 0.75rem;
+}
+
+.label:hover {
+  text-decoration: underline;
+}
+
+.arrow {
+  font-family: monospace;
+  font-size: 1.2rem;
+  position: relative;
+}

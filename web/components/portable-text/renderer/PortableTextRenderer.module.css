@@ -1,0 +1,11 @@
+.root > p:first-child {
+  margin-top: 3rem;
+}
+
+.link {
+  color: inherit;
+}
+
+.centered {
+  text-align: center;
+}

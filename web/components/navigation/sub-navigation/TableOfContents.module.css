@@ -1,0 +1,30 @@
+.root {
+  position: sticky;
+  top: calc(var(--height-header) + 3.5rem);
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-wrap: nowrap;
+}
+
+@media (max-width: 767px) {
+  .root {
+    display: none;
+  }
+}
+
+.title {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
