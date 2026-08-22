@@ -5,6 +5,7 @@ import {documentInternationalization} from '@sanity/document-internationalizatio
 import {schemaTypes} from './schemaTypes'
 import {table} from '@sanity/table'
 import {deployTool} from './plugins/deployTool'
+import {structure} from './structure'
 
 export default defineConfig({
   name: 'default',
@@ -14,7 +15,7 @@ export default defineConfig({
   dataset: process.env.SANITY_STUDIO_DATASET!,
 
   plugins: [
-    structureTool(),
+    structureTool({structure}),
     visionTool(),
     table(),
     deployTool(),

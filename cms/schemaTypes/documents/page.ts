@@ -95,9 +95,38 @@ export const pageType = defineType({
     }),
 
     defineField({
+      name: 'studioGroup',
+      title: 'Studio group',
+      type: 'string',
+      description:
+        'Editorial grouping for Sanity Studio only (e.g. general, docs, blog). Does not affect URLs or the website.',
+    }),
+
+    defineField({
       name: 'content',
       type: 'array',
       of: [{type: 'block'}],
     }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+      language: 'language',
+      path: 'path',
+      isHome: 'isHome',
+      studioGroup: 'studioGroup',
+    },
+    prepare({title, language, path, isHome, studioGroup}) {
+      const details = [
+        studioGroup,
+        language,
+        isHome ? 'home' : path,
+      ].filter(Boolean)
+
+      return {
+        title: title || 'Untitled',
+        subtitle: details.join(' · '),
+      }
+    },
+  },
 })
