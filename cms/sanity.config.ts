@@ -1,6 +1,7 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
+import {documentInternationalization} from '@sanity/document-internationalization'
 import {schemaTypes} from './schemaTypes'
 import {table} from '@sanity/table'
 import {deployTool} from './plugins/deployTool'
@@ -12,7 +13,22 @@ export default defineConfig({
   projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
   dataset: process.env.SANITY_STUDIO_DATASET!,
 
-  plugins: [structureTool(), visionTool(), table(), deployTool()],
+  plugins: [
+    structureTool(),
+    visionTool(),
+    table(),
+    deployTool(),
+    documentInternationalization({
+      supportedLanguages: [
+        {id: 'de', title: 'German'},
+        {id: 'en', title: 'English'},
+      ],
+      schemaTypes: ['page'],
+      languageField: 'language',
+      allowCreateMetaDoc: true,
+      apiVersion: '2026-01-18',
+    }),
+  ],
 
   schema: {
     types: schemaTypes,

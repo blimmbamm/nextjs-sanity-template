@@ -2,7 +2,7 @@
 
 import { Menu, X } from "lucide-react";
 import styles from "./MobileNav.module.css";
-import { NavigationQueryResult } from "../../../src/sanity/types";
+import { NavigationQueryResult } from "../../../src/types";
 import { useState } from "react";
 import MobileDrawer from "./MobileDrawer";
 import Link from "next/link";

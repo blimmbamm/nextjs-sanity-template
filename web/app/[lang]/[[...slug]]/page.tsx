@@ -1,0 +1,131 @@
+import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import BasicPortableText from "../../../components/portable-text/BasicPortableText";
+import { assertSupportedLang } from "../../../src/routing/validateLang";
+import { parsePathParam, resolvePageUrl } from "../../../src/routing/resolvePageUrl";
+import { client } from "../../../src/sanity/client";
+import { pageByPathQuery, pathsQuery } from "../../../src/sanity/queries";
+import { PageByPathQueryResult, PathsQueryResult } from "../../../src/sanity/types";
+import { SITE_URL } from "../../../src/environment";
+
+export const dynamic = "error";
+export const revalidate = false;
+
+export async function generateStaticParams() {
+  const pages = await client.fetch<PathsQueryResult>(pathsQuery);
+
+  return pages.flatMap((page) => {
+    if (!page.language) {
+      return [];
+    }
+
+    if (page.isHome) {
+      return [{ lang: page.language }];
+    }
+
+    if (!page.path) {
+      return [];
+    }
+
+    return [
+      {
+        lang: page.language,
+        slug: page.path.split("/"),
+      },
+    ];
+  });
+}
+
+function buildAlternateLanguages(page: NonNullable<PageByPathQueryResult>) {
+  const alternates: Record<string, string> = {};
+
+  if (page.language) {
+    alternates[page.language] = `${SITE_URL}${resolvePageUrl(page)}`;
+  }
+
+  for (const translation of page.translations ?? []) {
+    if (translation.page?.language) {
+      alternates[translation.page.language] = `${SITE_URL}${resolvePageUrl(translation.page)}`;
+    }
+  }
+
+  return alternates;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; slug?: string[] }>;
+}): Promise<Metadata> {
+  const { lang, slug } = await params;
+  assertSupportedLang(lang);
+
+  const path = parsePathParam(slug);
+  const page = await client.fetch<PageByPathQueryResult>(
+    pageByPathQuery,
+    { lang, path },
+    { cache: "force-cache" },
+  );
+
+  if (!page) {
+    return {};
+  }
+
+  return {
+    title: page.seoTitle ?? page.title,
+    description: page.description,
+    alternates: {
+      canonical: `${SITE_URL}${resolvePageUrl(page)}`,
+      languages: buildAlternateLanguages(page),
+    },
+  };
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ lang: string; slug?: string[] }>;
+}) {
+  const { lang, slug } = await params;
+  assertSupportedLang(lang);
+
+  const path = parsePathParam(slug);
+  const page = await client.fetch<PageByPathQueryResult>(
+    pageByPathQuery,
+    { lang, path },
+    { cache: "force-cache" },
+  );
+
+  if (!page) {
+    notFound();
+  }
+
+  return (
+    <article>
+      <h1>{page.title}</h1>
+
+      {(page.translations?.length ?? 0) > 0 && (
+        <nav aria-label="Language">
+          <ul>
+            {page.translations?.map((translation) => {
+              if (!translation.page) {
+                return null;
+              }
+
+              return (
+                <li key={translation.language ?? translation.page._id}>
+                  <Link href={resolvePageUrl(translation.page)}>
+                    {translation.language?.toUpperCase()}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      )}
+
+      {page.content && <BasicPortableText content={page.content} />}
+    </article>
+  );
+}

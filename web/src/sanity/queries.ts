@@ -4,110 +4,51 @@ export const metadataQuery = groq`
   *[_type == "metadata" && language == $lang][0]
 `;
 
-export const slugsQuery = groq`
-  *[
-    _type == "page" &&
-    defined(slug.current) &&
-    isHome != true
-  ]{
-    "slug": slug.current,
+export const pathsQuery = groq`
+  *[_type == "page" && defined(language)]{
+    language,
+    path,
+    isHome
+  }
+`;
+
+export const allPagesQuery = groq`
+  *[_type == "page" && language == $lang] | order(isHome desc, path asc) {
+    _id,
+    title,
+    path,
+    isHome,
     language
   }
 `;
 
-export const homepageQuery = groq`
-  *[_type == "page" && isHome == true && language == $lang][0]{
+export const pageByPathQuery = groq`
+  *[
+    _type == "page" &&
+    language == $lang &&
+    (
+      ($path == "" && isHome == true) ||
+      ($path != "" && path == $path && isHome != true)
+    )
+  ][0]{
     _id,
     title,
-    showPrevNextNav,
-    content[]{
-      ...,
-      _type == "videoRef" => {
-        ...,
-        video->{
-          caption,
+    seoTitle,
+    description,
+    path,
+    isHome,
+    language,
+    content,
+    "translations": *[_type == "translation.metadata" && references(^._id)][0]
+      .translations[]{
+        language,
+        "page": value->{
+          _id,
           title,
-          muted,
-          autoplay,
-          "url": file.asset->url,
-          "poster": poster.asset->url
-        }
-      },
-      _type == "imagesRef" => {
-        ...,
-        images->{
-          ...
+          path,
+          isHome,
+          language
         }
       }
-    }
-  }
-`;
-
-export const pageBySlugQuery = groq`
-  {
-    "page": *[
-      _type == "page" &&
-      slug.current == $slug && 
-      isHome != true &&
-      language == $lang
-    ][0]{
-      _id,
-      title,
-      seoTitle,
-      description,
-      slug,      
-      showPrevNextNav,
-      content[]{
-        ...,
-        _type == "videoRef" => {
-          ...,
-          video->{
-            caption,
-            title,
-            muted,
-            autoplay,
-            "url": file.asset->url,
-            "poster": poster.asset->url
-          }
-        },
-        _type == "imagesRef" => {
-          ...,
-          "images": images->
-        }
-      },
-      "slug": slug.current,
-      "navContext": *[_type == "navigation" && language == $lang][0]{
-        "dropdown": items[
-          _type == "navDropdown" && 
-          (count(items[page._ref == ^.^.^._id]) > 0)
-        ][0] {
-          ...,
-          items[]{
-            ...,
-            "slug": page->slug.current
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const navigationQuery = groq`
-  *[_type == "navigation" && language == $lang][0]{
-    items[]{
-      _type,
-      _key,
-      label,
-      _type == "navLink" => {
-        "slug": page->slug.current
-      },
-      _type == "navDropdown" => {
-        items[]{
-          label,
-          _key,
-          "slug": page->slug.current
-        }
-      }
-    }
   }
 `;

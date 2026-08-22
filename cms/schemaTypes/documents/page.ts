@@ -1,5 +1,7 @@
 import {defineField, defineType} from 'sanity'
 
+const pathPattern = /^[a-z0-9]+(?:\/[a-z0-9]+)*$/
+
 export const pageType = defineType({
   name: 'page',
   title: 'Page',
@@ -38,43 +40,51 @@ export const pageType = defineType({
     }),
 
     defineField({
-      name: 'slug',
-      type: 'slug',
-      options: {
-        source: 'title',
-        isUnique: async (value, context) => {
+      name: 'path',
+      title: 'Path',
+      type: 'string',
+      description: 'URL path without language prefix, e.g. "about" or "blog/post-1".',
+      validation: (rule) =>
+        rule.custom(async (path, context) => {
+          const isHome = context.document?.isHome
+
+          if (isHome && path) {
+            return 'Home page must not have a path'
+          }
+
+          if (!isHome && !path) {
+            return 'Non-home pages must have a path'
+          }
+
+          if (path && !pathPattern.test(path)) {
+            return 'Path must use lowercase letters, numbers, and slashes only'
+          }
+
+          if (!path || !context.document?.language) {
+            return true
+          }
+
           const {document, getClient} = context
           const client = getClient({apiVersion: '2026-01-18'})
-
-          if (!document?.language) return true
-
           const baseId = document._id.replace(/^drafts\./, '')
 
           const count = await client.fetch(
             `
               count(*[
                 _type == "page" &&
-                slug.current == $slug &&
+                path == $path &&
                 language == $language &&
                 !(_id in [$id, "drafts." + $id])
               ])
             `,
             {
-              slug: value,
+              path,
               language: document.language,
               id: baseId,
             },
           )
 
-          return count === 0
-        },
-      },
-      validation: (rule) =>
-        rule.custom((slug, context) => {
-          if (context.document?.isHome && slug?.current) {
-            return 'Home page must not have a slug'
-          }
-          return true
+          return count === 0 || 'Path must be unique for this language'
         }),
     }),
 
@@ -85,15 +95,9 @@ export const pageType = defineType({
     }),
 
     defineField({
-      name: 'showPrevNextNav',
-      title: 'Show prev/next navigation?',
-      type: 'boolean',
-      initialValue: true,
-    }),
-
-    defineField({
       name: 'content',
-      type: 'blockContent',
+      type: 'array',
+      of: [{type: 'block'}],
     }),
   ],
 })

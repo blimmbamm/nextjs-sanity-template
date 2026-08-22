@@ -12,6 +12,8 @@
  * ---------------------------------------------------------------------------------
  */
 
+export declare const internalGroqTypeReferenceTo: unique symbol;
+
 // Source: schema.json
 export type Banner = {
   _type: "banner";
@@ -31,6 +33,9 @@ export type Banner = {
       | "h5"
       | "h6"
       | "h1Centered"
+      | "h2Centered"
+      | "h3Centered"
+      | "h4Centered"
       | "centered";
     listItem?: "bullet" | "number";
     markDefs?: Array<{
@@ -244,6 +249,9 @@ export type BlockContent = Array<
         | "h5"
         | "h6"
         | "h1Centered"
+        | "h2Centered"
+        | "h3Centered"
+        | "h4Centered"
         | "centered";
       listItem?: "bullet" | "number";
       markDefs?: Array<
@@ -281,28 +289,6 @@ export type BlockContent = Array<
     } & Banner)
 >;
 
-export type Page = {
-  _id: string;
-  _type: "page";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  seoTitle?: string;
-  description?: string;
-  language?: "de" | "en";
-  slug?: Slug;
-  isHome?: boolean;
-  showPrevNextNav?: boolean;
-  content?: BlockContent;
-};
-
-export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
-};
-
 export type Link = {
   _type: "link";
   href?: string;
@@ -313,6 +299,66 @@ export type Anchor = {
   label?: string;
   slug?: Slug;
   hidden?: boolean;
+};
+
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
+export type TranslationMetadata = {
+  _id: string;
+  _type: "translation.metadata";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  translations?: InternationalizedArrayReference;
+  schemaTypes?: Array<string>;
+};
+
+export type InternationalizedArrayReference = Array<
+  {
+    _key: string;
+  } & InternationalizedArrayReferenceValue
+>;
+
+export type InternationalizedArrayReferenceValue = {
+  _type: "internationalizedArrayReferenceValue";
+  value?: PageReference;
+  language?: string;
+};
+
+export type Page = {
+  _id: string;
+  _type: "page";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  seoTitle?: string;
+  description?: string;
+  language?: "de" | "en";
+  path?: string;
+  isHome?: boolean;
+  content?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
 };
 
 export type Table = {
@@ -448,10 +494,13 @@ export type AllSanitySchemaTypes =
   | ImageGallery
   | ColumnText
   | BlockContent
-  | Page
-  | Slug
   | Link
   | Anchor
+  | Slug
+  | TranslationMetadata
+  | InternationalizedArrayReference
+  | InternationalizedArrayReferenceValue
+  | Page
   | Table
   | TableRow
   | SanityImagePaletteSwatch
@@ -462,8 +511,6 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint;
-
-export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: ../web/src/sanity/queries.ts
 // Variable: metadataQuery
@@ -481,336 +528,64 @@ export type MetadataQueryResult = {
 } | null;
 
 // Source: ../web/src/sanity/queries.ts
-// Variable: slugsQuery
-// Query: *[    _type == "page" &&    defined(slug.current) &&    isHome != true  ]{    "slug": slug.current,    language  }
-export type SlugsQueryResult = Array<{
-  slug: string | null;
+// Variable: pathsQuery
+// Query: *[_type == "page" && defined(language)]{    language,    path,    isHome  }
+export type PathsQueryResult = Array<{
+  language: "de" | "en";
+  path: string | null;
+  isHome: boolean | null;
+}>;
+
+// Source: ../web/src/sanity/queries.ts
+// Variable: allPagesQuery
+// Query: *[_type == "page" && language == $lang] | order(isHome desc, path asc) {    _id,    title,    path,    isHome,    language  }
+export type AllPagesQueryResult = Array<{
+  _id: string;
+  title: string | null;
+  path: string | null;
+  isHome: boolean | null;
   language: "de" | "en" | null;
 }>;
 
 // Source: ../web/src/sanity/queries.ts
-// Variable: homepageQuery
-// Query: *[_type == "page" && isHome == true && language == $lang][0]{    _id,    title,    showPrevNextNav,    content[]{      ...,      _type == "videoRef" => {        ...,        video->{          caption,          title,          muted,          autoplay,          "url": file.asset->url,          "poster": poster.asset->url        }      },      _type == "imagesRef" => {        ...,        images->{          ...        }      }    }  }
-export type HomepageQueryResult = {
+// Variable: pageByPathQuery
+// Query: *[    _type == "page" &&    language == $lang &&    (      ($path == "" && isHome == true) ||      ($path != "" && path == $path && isHome != true)    )  ][0]{    _id,    title,    seoTitle,    description,    path,    isHome,    language,    content,    "translations": *[_type == "translation.metadata" && references(^._id)][0]      .translations[]{        language,        "page": value->{          _id,          title,          path,          isHome,          language        }      }  }
+export type PageByPathQueryResult = {
   _id: string;
   title: string | null;
-  showPrevNextNav: boolean | null;
-  content: Array<
-    | {
-        _key: string;
-        _type: "banner";
-        content?: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?:
-            | "centered"
-            | "h1"
-            | "h1Centered"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6"
-            | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            href?: string;
-            _type: "link";
-            _key: string;
-          }>;
-          level?: number;
-          _type: "block";
-          _key: string;
-        }>;
-      }
-    | {
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?:
-          | "centered"
-          | "h1"
-          | "h1Centered"
-          | "h2"
-          | "h3"
-          | "h4"
-          | "h5"
-          | "h6"
-          | "normal";
-        listItem?: "bullet" | "number";
-        markDefs?: Array<
-          | ({
-              _key: string;
-            } & Anchor)
-          | ({
-              _key: string;
-            } & Link)
-        >;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }
-    | {
-        _key: string;
-        _type: "columnText";
-        col1?: BlockContent;
-        col2?: BlockContent;
-      }
-    | {
-        _key: string;
-        _type: "headlineWithDate";
-        date?: string;
-        title?: string;
-      }
-    | {
-        _key: string;
-        _type: "imageGallery";
-        images?: Array<{
-          asset?: SanityImageAssetReference;
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          caption?: string;
-          alt?: string;
-          _type: "image";
-          _key: string;
-        }>;
-      }
-    | {
-        _key: string;
-        _type: "imagesRef";
-        images: {
-          _id: string;
-          _type: "images";
-          _createdAt: string;
-          _updatedAt: string;
-          _rev: string;
-          title?: string;
-          images?: Array<{
-            asset?: SanityImageAssetReference;
-            media?: unknown;
-            hotspot?: SanityImageHotspot;
-            crop?: SanityImageCrop;
-            caption?: string;
-            alt?: string;
-            _type: "image";
-            _key: string;
-          }>;
-        } | null;
-      }
-    | {
-        _key: string;
-        _type: "table";
-        rows?: Array<
-          {
-            _key: string;
-          } & TableRow
-        >;
-      }
-    | {
-        _key: string;
-        _type: "videoRef";
-        video: {
-          caption: string | null;
-          title: string | null;
-          muted: boolean | null;
-          autoplay: boolean | null;
-          url: string | null;
-          poster: string | null;
-        } | null;
-      }
-  > | null;
-} | null;
-
-// Source: ../web/src/sanity/queries.ts
-// Variable: pageBySlugQuery
-// Query: {    "page": *[      _type == "page" &&      slug.current == $slug &&       isHome != true &&      language == $lang    ][0]{      _id,      title,      seoTitle,      description,      slug,            showPrevNextNav,      content[]{        ...,        _type == "videoRef" => {          ...,          video->{            caption,            title,            muted,            autoplay,            "url": file.asset->url,            "poster": poster.asset->url          }        },        _type == "imagesRef" => {          ...,          "images": images->        }      },      "slug": slug.current,      "navContext": *[_type == "navigation" && language == $lang][0]{        "dropdown": items[          _type == "navDropdown" &&           (count(items[page._ref == ^.^.^._id]) > 0)        ][0] {          ...,          items[]{            ...,            "slug": page->slug.current          }        }      }    }  }
-export type PageBySlugQueryResult = {
-  page: {
-    _id: string;
-    title: string | null;
-    seoTitle: string | null;
-    description: string | null;
-    slug: string | null;
-    showPrevNextNav: boolean | null;
-    content: Array<
-      | {
-          _key: string;
-          _type: "banner";
-          content?: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "centered"
-              | "h1"
-              | "h1Centered"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }>;
-        }
-      | {
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?:
-            | "centered"
-            | "h1"
-            | "h1Centered"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6"
-            | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<
-            | ({
-                _key: string;
-              } & Anchor)
-            | ({
-                _key: string;
-              } & Link)
-          >;
-          level?: number;
-          _type: "block";
-          _key: string;
-        }
-      | {
-          _key: string;
-          _type: "columnText";
-          col1?: BlockContent;
-          col2?: BlockContent;
-        }
-      | {
-          _key: string;
-          _type: "headlineWithDate";
-          date?: string;
-          title?: string;
-        }
-      | {
-          _key: string;
-          _type: "imageGallery";
-          images?: Array<{
-            asset?: SanityImageAssetReference;
-            media?: unknown;
-            hotspot?: SanityImageHotspot;
-            crop?: SanityImageCrop;
-            caption?: string;
-            alt?: string;
-            _type: "image";
-            _key: string;
-          }>;
-        }
-      | {
-          _key: string;
-          _type: "imagesRef";
-          images: {
-            _id: string;
-            _type: "images";
-            _createdAt: string;
-            _updatedAt: string;
-            _rev: string;
-            title?: string;
-            images?: Array<{
-              asset?: SanityImageAssetReference;
-              media?: unknown;
-              hotspot?: SanityImageHotspot;
-              crop?: SanityImageCrop;
-              caption?: string;
-              alt?: string;
-              _type: "image";
-              _key: string;
-            }>;
-          } | null;
-        }
-      | {
-          _key: string;
-          _type: "table";
-          rows?: Array<
-            {
-              _key: string;
-            } & TableRow
-          >;
-        }
-      | {
-          _key: string;
-          _type: "videoRef";
-          video: {
-            caption: string | null;
-            title: string | null;
-            muted: boolean | null;
-            autoplay: boolean | null;
-            url: string | null;
-            poster: string | null;
-          } | null;
-        }
-    > | null;
-    navContext: {
-      dropdown: {
-        _key: string;
-        _type: "navDropdown";
-        label?: string;
-        items: Array<{
-          _key: string;
-          _type: "navDropdownItem";
-          label?: string;
-          page?: PageReference;
-          slug: string | null;
-        }> | null;
-      } | null;
+  seoTitle: string | null;
+  description: string | null;
+  path: string | null;
+  isHome: boolean | null;
+  language: "de" | "en" | null;
+  content: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  translations: Array<{
+    language: string | null;
+    page: {
+      _id: string;
+      title: string | null;
+      path: string | null;
+      isHome: boolean | null;
+      language: "de" | "en" | null;
     } | null;
-  } | null;
-};
-
-// Source: ../web/src/sanity/queries.ts
-// Variable: navigationQuery
-// Query: *[_type == "navigation" && language == $lang][0]{    items[]{      _type,      _key,      label,      _type == "navLink" => {        "slug": page->slug.current      },      _type == "navDropdown" => {        items[]{          label,          _key,          "slug": page->slug.current        }      }    }  }
-export type NavigationQueryResult = {
-  items: Array<
-    | {
-        _type: "navDropdown";
-        _key: string;
-        label: string | null;
-        items: Array<{
-          label: string | null;
-          _key: string;
-          slug: string | null;
-        }> | null;
-      }
-    | {
-        _type: "navLink";
-        _key: string;
-        label: string | null;
-        slug: string | null;
-      }
-  > | null;
+  }> | null;
 } | null;
 
 // Query TypeMap
@@ -818,9 +593,8 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n  *[_type == "metadata" && language == $lang][0]\n': MetadataQueryResult;
-    '\n  *[\n    _type == "page" &&\n    defined(slug.current) &&\n    isHome != true\n  ]{\n    "slug": slug.current,\n    language\n  }\n': SlugsQueryResult;
-    '\n  *[_type == "page" && isHome == true && language == $lang][0]{\n    _id,\n    title,\n    showPrevNextNav,\n    content[]{\n      ...,\n      _type == "videoRef" => {\n        ...,\n        video->{\n          caption,\n          title,\n          muted,\n          autoplay,\n          "url": file.asset->url,\n          "poster": poster.asset->url\n        }\n      },\n      _type == "imagesRef" => {\n        ...,\n        images->{\n          ...\n        }\n      }\n    }\n  }\n': HomepageQueryResult;
-    '\n  {\n    "page": *[\n      _type == "page" &&\n      slug.current == $slug && \n      isHome != true &&\n      language == $lang\n    ][0]{\n      _id,\n      title,\n      seoTitle,\n      description,\n      slug,      \n      showPrevNextNav,\n      content[]{\n        ...,\n        _type == "videoRef" => {\n          ...,\n          video->{\n            caption,\n            title,\n            muted,\n            autoplay,\n            "url": file.asset->url,\n            "poster": poster.asset->url\n          }\n        },\n        _type == "imagesRef" => {\n          ...,\n          "images": images->\n        }\n      },\n      "slug": slug.current,\n      "navContext": *[_type == "navigation" && language == $lang][0]{\n        "dropdown": items[\n          _type == "navDropdown" && \n          (count(items[page._ref == ^.^.^._id]) > 0)\n        ][0] {\n          ...,\n          items[]{\n            ...,\n            "slug": page->slug.current\n          }\n        }\n      }\n    }\n  }\n': PageBySlugQueryResult;
-    '\n  *[_type == "navigation" && language == $lang][0]{\n    items[]{\n      _type,\n      _key,\n      label,\n      _type == "navLink" => {\n        "slug": page->slug.current\n      },\n      _type == "navDropdown" => {\n        items[]{\n          label,\n          _key,\n          "slug": page->slug.current\n        }\n      }\n    }\n  }\n': NavigationQueryResult;
+    '\n  *[_type == "page" && defined(language)]{\n    language,\n    path,\n    isHome\n  }\n': PathsQueryResult;
+    '\n  *[_type == "page" && language == $lang] | order(isHome desc, path asc) {\n    _id,\n    title,\n    path,\n    isHome,\n    language\n  }\n': AllPagesQueryResult;
+    '\n  *[\n    _type == "page" &&\n    language == $lang &&\n    (\n      ($path == "" && isHome == true) ||\n      ($path != "" && path == $path && isHome != true)\n    )\n  ][0]{\n    _id,\n    title,\n    seoTitle,\n    description,\n    path,\n    isHome,\n    language,\n    content,\n    "translations": *[_type == "translation.metadata" && references(^._id)][0]\n      .translations[]{\n        language,\n        "page": value->{\n          _id,\n          title,\n          path,\n          isHome,\n          language\n        }\n      }\n  }\n': PageByPathQueryResult;
   }
 }

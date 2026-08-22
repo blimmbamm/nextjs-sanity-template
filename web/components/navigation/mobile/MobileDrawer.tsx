@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavigationQueryResult } from "../../../src/sanity/types";
+import { NavigationQueryResult } from "../../../src/types";
 import { NavDropdownItemType } from "../../../src/types";
 import Link from "next/link";
 import { MoveLeft } from "lucide-react";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PageBySlugQueryResult } from "../../../src/sanity/types";
+import { PageBySlugQueryResult } from "../../../src/types";
 import styles from "./PreviousNextNavigation.module.css";
 
 type Props = {

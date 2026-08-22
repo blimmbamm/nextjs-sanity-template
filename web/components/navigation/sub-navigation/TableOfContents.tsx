@@ -1,4 +1,5 @@
-import { Anchor, PageBySlugQueryResult } from "../../../src/sanity/types";
+import { Anchor } from "../../../src/sanity/types";
+import { PageBySlugQueryResult } from "../../../src/types";
 import styles from "./TableOfContents.module.css";
 
 type Props = {

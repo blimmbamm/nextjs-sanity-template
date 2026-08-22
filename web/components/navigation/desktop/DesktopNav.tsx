@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { NavigationQueryResult } from "../../../src/sanity/types";
+import { NavigationQueryResult } from "../../../src/types";
 import styles from "./DesktopNav.module.css";
 import NavItem from "./NavItem";
 import { NavDropdownItemType } from "../../../src/types";
