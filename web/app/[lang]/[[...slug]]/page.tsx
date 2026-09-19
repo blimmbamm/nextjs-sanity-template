@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import BasicPortableText from "../../../components/portable-text/BasicPortableText";
+import SectionRenderer from "../../../components/sections/SectionRenderer";
+import styles from "./page.module.css";
 import { assertSupportedLang } from "../../../src/routing/validateLang";
 import { parsePathParam, resolvePageUrl } from "../../../src/routing/resolvePageUrl";
 import { client } from "../../../src/sanity/client";
@@ -103,29 +104,31 @@ export default async function Page({
 
   return (
     <article>
-      <h1>{page.title}</h1>
+      <header className={styles.header}>
+        <h1>{page.title}</h1>
 
-      {(page.translations?.length ?? 0) > 0 && (
-        <nav aria-label="Language">
-          <ul>
-            {page.translations?.map((translation) => {
-              if (!translation.page) {
-                return null;
-              }
+        {(page.translations?.length ?? 0) > 0 && (
+          <nav aria-label="Language" className={styles.langNav}>
+            <ul>
+              {page.translations?.map((translation) => {
+                if (!translation.page) {
+                  return null;
+                }
 
-              return (
-                <li key={translation.language ?? translation.page._id}>
-                  <Link href={resolvePageUrl(translation.page)}>
-                    {translation.language?.toUpperCase()}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      )}
+                return (
+                  <li key={translation.language ?? translation.page._id}>
+                    <Link href={resolvePageUrl(translation.page)}>
+                      {translation.language?.toUpperCase()}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        )}
+      </header>
 
-      {page.content && <BasicPortableText content={page.content} />}
+      {page.sections && <SectionRenderer sections={page.sections} />}
     </article>
   );
 }

@@ -1,0 +1,25 @@
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.paragraph {
+  margin: 0 0 1rem;
+}
+
+.paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+.h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  line-height: 1.35;
+}

@@ -289,6 +289,48 @@ export type BlockContent = Array<
     } & Banner)
 >;
 
+export type CalloutSection = {
+  _type: "calloutSection";
+  title?: string;
+  content?: SectionContent;
+};
+
+export type TwoColumnSection = {
+  _type: "twoColumnSection";
+  left?: SectionContent;
+  right?: SectionContent;
+};
+
+export type QuoteSection = {
+  _type: "quoteSection";
+  content?: SectionContent;
+  attribution?: string;
+};
+
+export type TextSection = {
+  _type: "textSection";
+  content?: SectionContent;
+};
+
+export type SectionContent = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal" | "h2" | "h3";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
 export type Link = {
   _type: "link";
   href?: string;
@@ -341,24 +383,21 @@ export type Page = {
   language?: "de" | "en";
   path?: string;
   isHome?: boolean;
-  content?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
+  studioGroup?: string;
+  sections?: Array<
+    | ({
+        _key: string;
+      } & TextSection)
+    | ({
+        _key: string;
+      } & QuoteSection)
+    | ({
+        _key: string;
+      } & TwoColumnSection)
+    | ({
+        _key: string;
+      } & CalloutSection)
+  >;
 };
 
 export type Table = {
@@ -494,6 +533,11 @@ export type AllSanitySchemaTypes =
   | ImageGallery
   | ColumnText
   | BlockContent
+  | CalloutSection
+  | TwoColumnSection
+  | QuoteSection
+  | TextSection
+  | SectionContent
   | Link
   | Anchor
   | Slug
@@ -549,7 +593,7 @@ export type AllPagesQueryResult = Array<{
 
 // Source: ../web/src/sanity/queries.ts
 // Variable: pageByPathQuery
-// Query: *[    _type == "page" &&    language == $lang &&    (      ($path == "" && isHome == true) ||      ($path != "" && path == $path && isHome != true)    )  ][0]{    _id,    title,    seoTitle,    description,    path,    isHome,    language,    content,    "translations": *[_type == "translation.metadata" && references(^._id)][0]      .translations[]{        language,        "page": value->{          _id,          title,          path,          isHome,          language        }      }  }
+// Query: *[    _type == "page" &&    language == $lang &&    (      ($path == "" && isHome == true) ||      ($path != "" && path == $path && isHome != true)    )  ][0]{    _id,    title,    seoTitle,    description,    path,    isHome,    language,    sections[]{      _key,      _type,      content,      attribution,      title,      left,      right    },    "translations": *[_type == "translation.metadata" && references(^._id)][0]      .translations[]{        language,        "page": value->{          _id,          title,          path,          isHome,          language        }      }  }
 export type PageByPathQueryResult = {
   _id: string;
   title: string | null;
@@ -558,24 +602,44 @@ export type PageByPathQueryResult = {
   path: string | null;
   isHome: boolean | null;
   language: "de" | "en" | null;
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }> | null;
+  sections: Array<
+    | {
+        _key: string;
+        _type: "calloutSection";
+        content: SectionContent | null;
+        attribution: null;
+        title: string | null;
+        left: null;
+        right: null;
+      }
+    | {
+        _key: string;
+        _type: "quoteSection";
+        content: SectionContent | null;
+        attribution: string | null;
+        title: null;
+        left: null;
+        right: null;
+      }
+    | {
+        _key: string;
+        _type: "textSection";
+        content: SectionContent | null;
+        attribution: null;
+        title: null;
+        left: null;
+        right: null;
+      }
+    | {
+        _key: string;
+        _type: "twoColumnSection";
+        content: null;
+        attribution: null;
+        title: null;
+        left: SectionContent | null;
+        right: SectionContent | null;
+      }
+  > | null;
   translations: Array<{
     language: string | null;
     page: {
@@ -595,6 +659,6 @@ declare module "@sanity/client" {
     '\n  *[_type == "metadata" && language == $lang][0]\n': MetadataQueryResult;
     '\n  *[_type == "page" && defined(language)]{\n    language,\n    path,\n    isHome\n  }\n': PathsQueryResult;
     '\n  *[_type == "page" && language == $lang] | order(isHome desc, path asc) {\n    _id,\n    title,\n    path,\n    isHome,\n    language\n  }\n': AllPagesQueryResult;
-    '\n  *[\n    _type == "page" &&\n    language == $lang &&\n    (\n      ($path == "" && isHome == true) ||\n      ($path != "" && path == $path && isHome != true)\n    )\n  ][0]{\n    _id,\n    title,\n    seoTitle,\n    description,\n    path,\n    isHome,\n    language,\n    content,\n    "translations": *[_type == "translation.metadata" && references(^._id)][0]\n      .translations[]{\n        language,\n        "page": value->{\n          _id,\n          title,\n          path,\n          isHome,\n          language\n        }\n      }\n  }\n': PageByPathQueryResult;
+    '\n  *[\n    _type == "page" &&\n    language == $lang &&\n    (\n      ($path == "" && isHome == true) ||\n      ($path != "" && path == $path && isHome != true)\n    )\n  ][0]{\n    _id,\n    title,\n    seoTitle,\n    description,\n    path,\n    isHome,\n    language,\n    sections[]{\n      _key,\n      _type,\n      content,\n      attribution,\n      title,\n      left,\n      right\n    },\n    "translations": *[_type == "translation.metadata" && references(^._id)][0]\n      .translations[]{\n        language,\n        "page": value->{\n          _id,\n          title,\n          path,\n          isHome,\n          language\n        }\n      }\n  }\n': PageByPathQueryResult;
   }
 }

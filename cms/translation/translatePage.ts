@@ -1,4 +1,4 @@
-import translateBlockContent from './translateBlockContent'
+import translateSections from './translateSections'
 import translateText from './translateText'
 
 export default async function translatePage(page: any) {
@@ -7,7 +7,7 @@ export default async function translatePage(page: any) {
 
   const translatedSeoTitle = await translateText(page.seoTitle)
   const translatedDescription = await translateText(page.description)
-  const translatedContent = await translateBlockContent(page.content || [])
+  const translatedSections = await translateSections(page.sections || [])
 
   console.log('\nTranslated title:', translatedSeoTitle)
   console.log('Translated description:', translatedDescription)
@@ -16,6 +16,6 @@ export default async function translatePage(page: any) {
     ...page,
     seoTitle: translatedSeoTitle,
     description: translatedDescription,
-    content: translatedContent,
+    sections: translatedSections,
   }
 }

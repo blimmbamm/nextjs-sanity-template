@@ -103,9 +103,15 @@ export const pageType = defineType({
     }),
 
     defineField({
-      name: 'content',
+      name: 'sections',
+      title: 'Sections',
       type: 'array',
-      of: [{type: 'block'}],
+      of: [
+        {type: 'textSection'},
+        {type: 'quoteSection'},
+        {type: 'twoColumnSection'},
+        {type: 'calloutSection'},
+      ],
     }),
   ],
   preview: {

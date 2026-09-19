@@ -1,0 +1,12 @@
+.section {
+  padding: 2.75rem 1.5rem;
+}
+
+.inner {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.innerWide {
+  max-width: 56rem;
+}

@@ -1,5 +1,5 @@
 import {defineMigration, patch, at, set} from 'sanity/migrate'
-import extractPlainTextFromBlocks from '../seo/extractPlainTextFromBlocks'
+import extractPlainTextFromSections from '../seo/extractPlainTextFromSections'
 import generateSeoDescription from '../seo/generateSeoDescription'
 
 export default defineMigration({
@@ -11,9 +11,9 @@ export default defineMigration({
       // Skip if description already exists
       if (doc.description) continue
 
-      if (!Array.isArray(doc.content)) continue
+      if (!Array.isArray(doc.sections)) continue
 
-      const text = extractPlainTextFromBlocks(doc.content)
+      const text = extractPlainTextFromSections(doc.sections)
 
       // Skip empty or trivial content
       if (!text || text.length < 50) continue

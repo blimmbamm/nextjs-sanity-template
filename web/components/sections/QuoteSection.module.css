@@ -1,0 +1,34 @@
+.root {
+  background: #f5f2eb;
+  border-block: 1px solid #e7e0d4;
+}
+
+.quote {
+  position: relative;
+  margin: 0;
+  padding: 0.5rem 1rem 0;
+  text-align: center;
+  font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+  line-height: 1.55;
+  font-style: italic;
+  color: #292524;
+}
+
+.quote::before {
+  content: '“';
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 2.75rem;
+  line-height: 1;
+  font-style: normal;
+  color: #a8a29e;
+}
+
+.attribution {
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #78716c;
+}

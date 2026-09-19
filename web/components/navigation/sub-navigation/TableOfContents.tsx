@@ -8,8 +8,21 @@ type Props = {
 };
 
 export default function TableOfContents({ pageData, lang }: Props) {
-  const tableOfContents = pageData.page?.content
-    ?.filter((b) => b._type === "block")
+  const blocks =
+    pageData.page?.sections?.flatMap((section) => {
+      if (section._type === "twoColumnSection") {
+        return [...(section.left ?? []), ...(section.right ?? [])];
+      }
+
+      if ("content" in section && Array.isArray(section.content)) {
+        return section.content;
+      }
+
+      return [];
+    }) ?? [];
+
+  const tableOfContents = blocks
+    .filter((block) => block._type === "block")
     .flatMap((block) =>
       block.children?.flatMap(
         (child) =>

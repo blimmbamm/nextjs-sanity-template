@@ -1,5 +1,5 @@
 import {createClient} from '@sanity/client'
-import extractPlainTextFromBlocks from './extractPlainTextFromBlocks'
+import extractPlainTextFromSections from './extractPlainTextFromSections'
 import generateSeoDescription from './generateSeoDescription'
 
 // -------------------------
@@ -30,7 +30,7 @@ async function getSinglePage() {
 async function testGeneration() {
   const page = await getSinglePage()
 
-  const text = extractPlainTextFromBlocks(page.content);
+  const text = extractPlainTextFromSections(page.sections ?? []);
 
   const description = await generateSeoDescription(text)
 

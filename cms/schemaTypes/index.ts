@@ -11,6 +11,13 @@ import {imagesRefType} from './objects/imagesRef'
 import {anchorAnnotation} from './objects/navigation/anchor'
 import {columnTextType} from './objects/navigation/columnText'
 import {linkAnnotation} from './objects/navigation/link'
+import {sectionContentType} from './objects/sections/sectionContent'
+import {
+  calloutSectionType,
+  quoteSectionType,
+  textSectionType,
+  twoColumnSectionType,
+} from './objects/sections/sectionTypes'
 import {navDropdownType} from './objects/navigation/navDropdown'
 import {navDropdownItemType} from './objects/navigation/navDropdownItem'
 import {navLinkType} from './objects/navigation/navLink'
@@ -20,6 +27,11 @@ export const schemaTypes = [
   anchorAnnotation,
   linkAnnotation,
   pageType,
+  sectionContentType,
+  textSectionType,
+  quoteSectionType,
+  twoColumnSectionType,
+  calloutSectionType,
   blockContentType,
   columnTextType,
   imageGalleryType,

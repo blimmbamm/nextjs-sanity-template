@@ -1,0 +1,23 @@
+.callout {
+  padding: 1.35rem 1.5rem 1.35rem 1.35rem;
+  border-radius: 0.35rem;
+  border: 1px solid #fcd34d;
+  border-left-width: 5px;
+  background: #fffbeb;
+  color: #1c1917;
+  box-shadow: 0 1px 0 rgba(28, 25, 23, 0.04);
+}
+
+.title {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #92400e;
+}
+
+.body {
+  font-size: 1rem;
+  line-height: 1.6;
+}

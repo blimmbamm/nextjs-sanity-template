@@ -38,7 +38,15 @@ export const pageByPathQuery = groq`
     path,
     isHome,
     language,
-    content,
+    sections[]{
+      _key,
+      _type,
+      content,
+      attribution,
+      title,
+      left,
+      right
+    },
     "translations": *[_type == "translation.metadata" && references(^._id)][0]
       .translations[]{
         language,
