@@ -1,0 +1,252 @@
+.header {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0.75rem 1.25rem;
+}
+
+.desktop {
+  display: none;
+}
+
+.mobileBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgb(0 0 0 / 35%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.drawerBackdrop[data-open] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: min(20rem, 86vw);
+  height: 100%;
+  padding: 0.75rem 1.25rem 1.5rem;
+  background: #fff;
+  box-shadow: 4px 0 24px rgb(0 0 0 / 12%);
+  transform: translateX(-105%);
+  transition: transform 0.2s ease;
+  overflow-y: auto;
+  visibility: hidden;
+}
+
+.drawer[data-open] {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+@media (min-width: 768px) {
+  .desktop {
+    display: block;
+  }
+
+  .mobileBar,
+  .drawerBackdrop,
+  .drawer {
+    display: none;
+  }
+}
+
+.listRootDesktop {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.listRootMobile {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0 0;
+}
+
+.listNested {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0 0 0 0.85rem;
+}
+
+.item {
+  position: relative;
+}
+
+.linkLabel {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.linkLabel:hover {
+  text-decoration: underline;
+}
+
+.groupLabel {
+  color: inherit;
+  cursor: default;
+  text-decoration: none;
+}
+
+.homeLink {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.homeLink:hover {
+  text-decoration: underline;
+}
+
+.active {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.groupLabel.active {
+  text-decoration: none;
+}
+
+.listRootDesktop > .hasChildren > .listNested {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 20;
+  min-width: 12rem;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+}
+
+.listRootDesktop > .hasChildren:hover > .listNested,
+.listRootDesktop > .hasChildren:focus-within > .listNested {
+  display: block;
+}
+
+.listRootDesktop .listNested .listNested {
+  display: block;
+  position: static;
+  min-width: 0;
+  margin: 0.25rem 0 0.15rem;
+  padding: 0 0 0 0.85rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.listRootDesktop .listNested .item {
+  padding: 0.2rem 0;
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 0.25rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.menuIcon {
+  position: relative;
+  display: block;
+  width: 1.1rem;
+  height: 2px;
+  background: #171717;
+  transition: background 0.15s ease;
+}
+
+.menuIcon::before,
+.menuIcon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #171717;
+  transition:
+    transform 0.15s ease,
+    top 0.15s ease;
+}
+
+.menuIcon::before {
+  top: -6px;
+}
+
+.menuIcon::after {
+  top: 6px;
+}
+
+.menuIcon[data-open] {
+  background: transparent;
+}
+
+.menuIcon[data-open]::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.menuIcon[data-open]::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.details {
+  width: 100%;
+}
+
+.summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.overviewLink {
+  display: block;
+  margin: 0.35rem 0 0.15rem 0.85rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.overviewLink:hover {
+  text-decoration: underline;
+}

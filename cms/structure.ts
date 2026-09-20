@@ -2,6 +2,12 @@ import type {StructureResolver} from 'sanity/structure'
 
 const API_VERSION = '2026-01-18'
 
+const HIDDEN_FROM_TYPE_LIST = new Set([
+  'page',
+  'navigation',
+  'translation.metadata',
+])
+
 function formatGroupLabel(group: string) {
   return group.charAt(0).toUpperCase() + group.slice(1)
 }
@@ -64,8 +70,37 @@ export const structure: StructureResolver = async (S, context) => {
       ),
   ]
 
+  const navigationItems = S.listItem()
+    .title('Main Navigation')
+    .child(
+      S.list()
+        .title('Main Navigation')
+        .items([
+          S.listItem()
+            .title('German')
+            .id('navigation-de')
+            .child(
+              S.document()
+                .schemaType('navigation')
+                .documentId('navigation-de')
+                .title('Main Navigation (DE)')
+                .initialValueTemplate('navigation-de'),
+            ),
+          S.listItem()
+            .title('English')
+            .id('navigation-en')
+            .child(
+              S.document()
+                .schemaType('navigation')
+                .documentId('navigation-en')
+                .title('Main Navigation (EN)')
+                .initialValueTemplate('navigation-en'),
+            ),
+        ]),
+    )
+
   const otherDocumentTypes = S.documentTypeListItems().filter(
-    (item) => item.getId() !== 'page' && item.getId() !== 'translation.metadata',
+    (item) => !HIDDEN_FROM_TYPE_LIST.has(item.getId() ?? ''),
   )
 
   return S.list()
@@ -74,6 +109,8 @@ export const structure: StructureResolver = async (S, context) => {
       S.listItem()
         .title('Pages')
         .child(S.list().title('Pages').items(pageItems)),
+      S.divider(),
+      navigationItems,
       S.divider(),
       ...otherDocumentTypes,
     ])

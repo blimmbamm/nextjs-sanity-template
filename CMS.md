@@ -16,7 +16,7 @@ In der linken Sidebar findest du unter **Content**:
 | **Image** | Einzelne wiederverwendbare Bilder (`singleImage`) |
 | **Images** | Wiederverwendbare Bildergalerien |
 | **Video** | Wiederverwendbare Videos |
-| **Main Navigation** | Hauptnavigation pro Sprache |
+| **Main Navigation** | Hauptnavigation pro Sprache (Singleton DE/EN, rekursive Items) |
 | **Metadata (for SEO)** | Globale SEO-Metadaten pro Sprache |
 
 Zusätzliche Tools im Studio:
@@ -206,20 +206,35 @@ Beim Shared-Dokument gibt es zusätzlich einen Pflicht-**Title** zur Orientierun
 
 ## Navigation
 
-Dokumenttyp **Main Navigation** – getrennt pro Sprache.
+Dokumenttyp **Main Navigation** – ein Singleton **pro Sprache** (DE / EN) in der Sidebar unter *Main Navigation*.
 
 | Feld | Bedeutung |
 |------|-----------|
 | **Title** | Interner Name |
-| **Language** | `de` / `en` |
-| **Navigation items** | Liste aus Links und Dropdowns |
+| **Language** | `de` / `en` (bei Singleton-Dokumenten vorausgefüllt) |
+| **Navigation items** | Rekursive Liste von **Navigation items** (max. 3 Ebenen) |
 
-### Item-Typen
+### Navigation item
 
-1. **Navigation Link** – Label + Referenz auf eine **Page**
-2. **Navigation Dropdown** – Label + Liste von **Dropdown Items** (jeweils Label + Page-Referenz)
+Jedes Item hat:
 
-Links zeigen immer auf Page-Dokumente, nicht auf freie URLs. Externe Links in der Navigation sind damit derzeit nicht vorgesehen (externe Links im Fließtext über die Link-Annotation schon).
+| Feld | Bedeutung |
+|------|-----------|
+| **Label** | Anzeigetext (Pflicht) |
+| **Link** | Optional – Ziel (`navTarget`). Ohne Link = reine Gruppe |
+| **Child items** | Optionale Unterpunkte (wieder `navItem`, max. Tiefe 3) |
+
+### Link target (`navTarget`)
+
+| Feld | Bedeutung |
+|------|-----------|
+| **Link type** | `internal` (Page) oder `external` (URL) |
+| **Page** | Referenz auf eine Page derselben Sprache (nur internal) |
+| **Hash / anchor** | Optional, ohne `#` (nur internal) |
+| **URL** | Externe Adresse (nur external) |
+| **Open in new tab** | Optional |
+
+Interne URLs leitet die Website aus `page.path` / `isHome` ab (`/{lang}` bzw. `/{lang}/{path}`). Externe Links im Fließtext bleiben über die Portable-Text-Annotation `link` möglich.
 
 ---
 
@@ -260,7 +275,7 @@ Die Website ist statisch gebaut: Inhalte erscheinen online erst nach einem erfol
 | Einzelnes Bild, über Übersetzungen synchron | *Image*-Dokument + *Image (shared)* im Text |
 | Video nur hier | *Video*-Section (inline) |
 | Video über Übersetzungen/Seiten hinweg | *Video*-Dokument + *Video (shared)* oder `videoRef` |
-| Menüpunkt | Navigation (pro Sprache) |
+| Menüpunkt | Main Navigation (pro Sprache, rekursive Items) |
 | Site-weite Meta-Defaults | Metadata (pro Sprache) |
 | Seiten in der Sidebar ordnen | Feld *Studio group* |
 

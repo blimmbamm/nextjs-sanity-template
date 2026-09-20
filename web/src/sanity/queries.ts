@@ -12,13 +12,40 @@ export const pathsQuery = groq`
   }
 `;
 
-export const allPagesQuery = groq`
-  *[_type == "page" && language == $lang] | order(isHome desc, path asc) {
+const navLinkProjection = groq`{
+  type,
+  hash,
+  href,
+  openInNewTab,
+  page->{
     _id,
     title,
     path,
     isHome,
     language
+  }
+}`;
+
+export const navigationQuery = groq`
+  *[_type == "navigation" && language == $lang][0]{
+    _id,
+    title,
+    language,
+    items[]{
+      _key,
+      label,
+      link${navLinkProjection},
+      children[]{
+        _key,
+        label,
+        link${navLinkProjection},
+        children[]{
+          _key,
+          label,
+          link${navLinkProjection}
+        }
+      }
+    }
   }
 `;
 

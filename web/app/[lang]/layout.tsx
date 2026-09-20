@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { assertSupportedLang } from "../../src/routing/validateLang";
-import { resolvePageUrl } from "../../src/routing/resolvePageUrl";
 import { client } from "../../src/sanity/client";
-import { allPagesQuery, metadataQuery } from "../../src/sanity/queries";
-import { AllPagesQueryResult, MetadataQueryResult } from "../../src/sanity/types";
+import { metadataQuery } from "../../src/sanity/queries";
+import { MetadataQueryResult } from "../../src/sanity/types";
 import { SITE_URL } from "../../src/environment";
+import { SiteHeader } from "../../components/site-header/SiteHeader";
 
 export const dynamic = "error";
 export const revalidate = false;
@@ -47,26 +46,10 @@ export default async function RootLayout({
   const { lang } = await params;
   assertSupportedLang(lang);
 
-  const pages = await client.fetch<AllPagesQueryResult>(
-    allPagesQuery,
-    { lang },
-    { cache: "force-cache" },
-  );
-
   return (
     <html lang={lang}>
       <body>
-        <nav>
-          <ul>
-            {pages.map((page) => (
-              <li key={page._id}>
-                <Link href={resolvePageUrl(page)}>
-                  {page.title ?? (page.isHome ? "Home" : page.path)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <SiteHeader lang={lang} />
         <main>{children}</main>
       </body>
     </html>

@@ -31,5 +31,26 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+    templates: (prev) => [
+      ...prev.filter((template) => template.schemaType !== 'navigation'),
+      {
+        id: 'navigation-de',
+        title: 'Main Navigation (DE)',
+        schemaType: 'navigation',
+        value: {
+          title: 'Main Navigation (DE)',
+          language: 'de',
+        },
+      },
+      {
+        id: 'navigation-en',
+        title: 'Main Navigation (EN)',
+        schemaType: 'navigation',
+        value: {
+          title: 'Main Navigation (EN)',
+          language: 'en',
+        },
+      },
+    ],
   },
 })

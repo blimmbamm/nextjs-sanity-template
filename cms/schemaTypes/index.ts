@@ -7,9 +7,8 @@ import {videoType} from './documents/video'
 import {imageRefType} from './objects/imageRef'
 import {localeStringType} from './objects/localeString'
 import {linkAnnotation} from './objects/navigation/link'
-import {navDropdownType} from './objects/navigation/navDropdown'
-import {navDropdownItemType} from './objects/navigation/navDropdownItem'
-import {navLinkType} from './objects/navigation/navLink'
+import {navItemType} from './objects/navigation/navItem'
+import {navTargetType} from './objects/navigation/navTarget'
 import {gallerySectionType} from './objects/sections/gallerySection'
 import {sectionContentType} from './objects/sections/sectionContent'
 import {
@@ -36,9 +35,8 @@ export const schemaTypes = [
   videoSectionType,
   sharedVideoSectionType,
   navigationType,
-  navLinkType,
-  navDropdownType,
-  navDropdownItemType,
+  navItemType,
+  navTargetType,
   metadataType,
   localeStringType,
   imageType,
