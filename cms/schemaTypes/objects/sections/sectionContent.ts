@@ -20,5 +20,11 @@ export const sectionContentType = defineType({
         ],
       },
     }),
+    defineArrayMember({
+      type: 'imageRef',
+    }),
+    defineArrayMember({
+      type: 'videoRef',
+    }),
   ],
 })

@@ -184,3 +184,10 @@ page
 - Beispiel-Implementierung je Komponente
 - Wie am besten Navigation gestalten?
 - Im Allgemeinen dieser neue Plan: Kein over-engineering von Sanity-Komponenten sondern einen Satz von Beispiel-Komponenten, da konkreter Anwendungsfall wahrscheinlich ohnehin custom Sachen braucht
+- wie am besten Footer verwalten?
+- e2e tests?
+- KI beschreiben lassen in docs, wie sich das template zusammensetzt
+- einen skill machen, der ein neues projekt auf basis des Templates erstellt
+- Demo-Umfang reduzieren, also pages löschen
+    - möglichkeiten bzgl. dynamischen paths aufzeigen
+    - Demo für Komponenten aber nur in einer page

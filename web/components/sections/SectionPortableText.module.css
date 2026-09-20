@@ -23,3 +23,23 @@
   font-size: 1.125rem;
   line-height: 1.35;
 }
+
+.figure {
+  margin: 1.25rem 0;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.caption {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.mediaBlock {
+  margin: 1.25rem 0;
+}

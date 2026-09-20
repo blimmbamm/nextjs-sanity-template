@@ -5,13 +5,14 @@ import styles from './QuoteSection.module.css'
 
 type Props = {
   section: Extract<PageSection, {_type: 'quoteSection'}>
+  lang: string
 }
 
-export default function QuoteSectionBlock({section}: Props) {
+export default function QuoteSectionBlock({section, lang}: Props) {
   return (
     <SectionShell className={styles.root}>
       <blockquote className={styles.quote}>
-        <SectionPortableText content={section.content} />
+        <SectionPortableText content={section.content} lang={lang} />
         {section.attribution && (
           <footer className={styles.attribution}>{section.attribution}</footer>
         )}

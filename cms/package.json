@@ -11,8 +11,6 @@
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
     "typegen": "sanity schema extract && sanity typegen generate",
-    "translation:test": "tsx --env-file=.env ./translation/testPageTranslation.ts",
-    "seo-description:test": "tsx --env-file=.env ./seo/testSeoDescriptionGeneration.ts",
     "sync:prod-to-dev": "sanity dataset export production tmp.tar.gz && sanity dataset import tmp.tar.gz development --replace"
   },
   "keywords": [
@@ -21,9 +19,7 @@
   "dependencies": {
     "@sanity/document-internationalization": "^6.2.33",
     "@sanity/export": "^6.0.5",
-    "@sanity/table": "^2.0.0",
     "@sanity/vision": "^5.31.2",
-    "openai": "^6.16.0",
     "react": "^19.1",
     "react-dom": "^19.1",
     "sanity": "^5.31.2",

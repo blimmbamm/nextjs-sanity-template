@@ -63,7 +63,7 @@ export default function ImageCarousel({
               key={img._key}
               className={styles.image}
               src={src(img)}
-              alt={img.alt}
+              alt={img.alt ?? undefined}
               onClick={() => onClickImage?.(img)}
             />
           ))}

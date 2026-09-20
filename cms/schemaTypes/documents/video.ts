@@ -1,5 +1,12 @@
 import {defineType, defineField} from 'sanity'
 
+/**
+ * Shared video document, referenced (via `sharedVideoSection` or
+ * `videoRef`) from one or more pages. `caption`/`alt` use `localeString`
+ * so the same file/settings can be reused across page translations while
+ * the text still differs per language. For a one-off video, prefer the
+ * inline `videoSection` instead.
+ */
 export const videoType = defineType({
   name: 'video',
   title: 'Video',
@@ -32,13 +39,13 @@ export const videoType = defineType({
     defineField({
       name: 'caption',
       title: 'Caption',
-      type: 'text',
+      type: 'localeString',
     }),
 
     defineField({
       name: 'alt',
       title: 'Accessibility description',
-      type: 'string',
+      type: 'localeString',
     }),
 
     defineField({

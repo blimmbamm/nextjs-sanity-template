@@ -1,6 +1,7 @@
 import {defineField, defineType} from 'sanity'
 
-const pathPattern = /^[a-z0-9]+(?:\/[a-z0-9]+)*$/
+/** Segments: lowercase letters/digits, optional hyphenated parts; joined by `/`. */
+const pathPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/
 
 export const pageType = defineType({
   name: 'page',
@@ -43,10 +44,12 @@ export const pageType = defineType({
       name: 'path',
       title: 'Path',
       type: 'string',
-      description: 'URL path without language prefix, e.g. "about" or "blog/post-1".',
+      description:
+        'URL path without language prefix, e.g. "about", "about-us", or "blog/post-1".',
       validation: (rule) =>
         rule.custom(async (path, context) => {
-          const isHome = context.document?.isHome
+          // Treat null/undefined like false (legacy docs often omit isHome).
+          const isHome = Boolean(context.document?.isHome)
 
           if (isHome && path) {
             return 'Home page must not have a path'
@@ -57,7 +60,7 @@ export const pageType = defineType({
           }
 
           if (path && !pathPattern.test(path)) {
-            return 'Path must use lowercase letters, numbers, and slashes only'
+            return 'Path must use lowercase letters, numbers, hyphens, and slashes only'
           }
 
           if (!path || !context.document?.language) {
@@ -66,7 +69,9 @@ export const pageType = defineType({
 
           const {document, getClient} = context
           const client = getClient({apiVersion: '2026-01-18'})
-          const baseId = document._id.replace(/^drafts\./, '')
+          const baseId = document._id
+            .replace(/^drafts\./, '')
+            .replace(/^versions\.[^.]+\./, '')
 
           const count = await client.fetch(
             `
@@ -111,6 +116,10 @@ export const pageType = defineType({
         {type: 'quoteSection'},
         {type: 'twoColumnSection'},
         {type: 'calloutSection'},
+        {type: 'gallerySection'},
+        {type: 'sharedGallerySection'},
+        {type: 'videoSection'},
+        {type: 'sharedVideoSection'},
       ],
     }),
   ],

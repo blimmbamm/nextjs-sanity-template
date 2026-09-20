@@ -3,7 +3,6 @@ import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {documentInternationalization} from '@sanity/document-internationalization'
 import {schemaTypes} from './schemaTypes'
-import {table} from '@sanity/table'
 import {deployTool} from './plugins/deployTool'
 import {structure} from './structure'
 
@@ -17,7 +16,6 @@ export default defineConfig({
   plugins: [
     structureTool({structure}),
     visionTool(),
-    table(),
     deployTool(),
     documentInternationalization({
       supportedLanguages: [

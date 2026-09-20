@@ -61,6 +61,57 @@ export type ImagesRef = {
   images?: ImagesReference;
 };
 
+export type VideoReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "video";
+};
+
+export type VideoRef = {
+  _type: "videoRef";
+  /** Expanded by `pageByPathQuery` for frontend rendering. */
+  video?: {
+    _id: string;
+    title?: string | null;
+    videoUrl?: string | null;
+    poster?: {
+      asset?: SanityImageAssetReference;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+    caption?: LocaleString | null;
+    alt?: LocaleString | null;
+    autoplay?: boolean | null;
+    muted?: boolean | null;
+  } | null;
+};
+
+export type SingleImageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "singleImage";
+};
+
+export type ImageRef = {
+  _type: "imageRef";
+  /** Expanded by `pageByPathQuery` for frontend rendering. */
+  image?: {
+    _id: string;
+    title?: string | null;
+    image?: {
+      asset?: SanityImageAssetReference;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+    alt?: LocaleString | null;
+    caption?: LocaleString | null;
+  } | null;
+};
+
 export type SanityImageAssetReference = {
   _ref: string;
   _type: "reference";
@@ -68,23 +119,28 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
-export type Images = {
+export type SingleImage = {
   _id: string;
-  _type: "images";
+  _type: "singleImage";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   title?: string;
-  images?: Array<{
+  image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    caption?: string;
-    alt?: string;
     _type: "image";
-    _key: string;
-  }>;
+  };
+  alt?: LocaleString;
+  caption?: LocaleString;
+};
+
+export type LocaleString = {
+  _type: "localeString";
+  de?: string;
+  en?: string;
 };
 
 export type SanityImageCrop = {
@@ -101,50 +157,6 @@ export type SanityImageHotspot = {
   y?: number;
   height?: number;
   width?: number;
-};
-
-export type VideoReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "video";
-};
-
-export type VideoRef = {
-  _type: "videoRef";
-  video?: VideoReference;
-};
-
-export type SanityFileAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
-};
-
-export type Video = {
-  _id: string;
-  _type: "video";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  file?: {
-    asset?: SanityFileAssetReference;
-    media?: unknown;
-    _type: "file";
-  };
-  poster?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  caption?: string;
-  alt?: string;
-  autoplay?: boolean;
-  muted?: boolean;
 };
 
 export type Metadata = {
@@ -289,6 +301,101 @@ export type BlockContent = Array<
     } & Banner)
 >;
 
+export type SharedVideoSection = {
+  _type: "sharedVideoSection";
+  video?: VideoReference;
+};
+
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+};
+
+export type Video = {
+  _id: string;
+  _type: "video";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  file?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: "file";
+  };
+  poster?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  caption?: LocaleString;
+  alt?: LocaleString;
+  autoplay?: boolean;
+  muted?: boolean;
+};
+
+export type VideoSection = {
+  _type: "videoSection";
+  file?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: "file";
+  };
+  poster?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  caption?: string;
+  alt?: string;
+  autoplay?: boolean;
+  muted?: boolean;
+};
+
+export type SharedGallerySection = {
+  _type: "sharedGallerySection";
+  gallery?: ImagesReference;
+};
+
+export type Images = {
+  _id: string;
+  _type: "images";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  images?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    caption?: LocaleString;
+    alt?: LocaleString;
+    _type: "image";
+    _key: string;
+  }>;
+};
+
+export type GallerySection = {
+  _type: "gallerySection";
+  images?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    caption?: string;
+    alt?: string;
+    _type: "image";
+    _key: string;
+  }>;
+};
+
 export type CalloutSection = {
   _type: "calloutSection";
   title?: string;
@@ -312,24 +419,32 @@ export type TextSection = {
   content?: SectionContent;
 };
 
-export type SectionContent = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal" | "h2" | "h3";
-  listItem?: "bullet" | "number";
-  markDefs?: Array<
-    {
+export type SectionContent = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h2" | "h3";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<
+        {
+          _key: string;
+        } & Link
+      >;
+      level?: number;
+      _type: "block";
       _key: string;
-    } & Link
-  >;
-  level?: number;
-  _type: "block";
-  _key: string;
-}>;
+    }
+  | ({
+      _key: string;
+    } & ImageRef)
+  | ({
+      _key: string;
+    } & VideoRef)
+>;
 
 export type Link = {
   _type: "link";
@@ -397,6 +512,18 @@ export type Page = {
     | ({
         _key: string;
       } & CalloutSection)
+    | ({
+        _key: string;
+      } & GallerySection)
+    | ({
+        _key: string;
+      } & SharedGallerySection)
+    | ({
+        _key: string;
+      } & VideoSection)
+    | ({
+        _key: string;
+      } & SharedVideoSection)
   >;
 };
 
@@ -515,14 +642,15 @@ export type AllSanitySchemaTypes =
   | Banner
   | ImagesReference
   | ImagesRef
-  | SanityImageAssetReference
-  | Images
-  | SanityImageCrop
-  | SanityImageHotspot
   | VideoReference
   | VideoRef
-  | SanityFileAssetReference
-  | Video
+  | SingleImageReference
+  | ImageRef
+  | SanityImageAssetReference
+  | SingleImage
+  | LocaleString
+  | SanityImageCrop
+  | SanityImageHotspot
   | Metadata
   | HeadlineWithDate
   | PageReference
@@ -533,6 +661,13 @@ export type AllSanitySchemaTypes =
   | ImageGallery
   | ColumnText
   | BlockContent
+  | SharedVideoSection
+  | SanityFileAssetReference
+  | Video
+  | VideoSection
+  | SharedGallerySection
+  | Images
+  | GallerySection
   | CalloutSection
   | TwoColumnSection
   | QuoteSection
@@ -593,7 +728,7 @@ export type AllPagesQueryResult = Array<{
 
 // Source: ../web/src/sanity/queries.ts
 // Variable: pageByPathQuery
-// Query: *[    _type == "page" &&    language == $lang &&    (      ($path == "" && isHome == true) ||      ($path != "" && path == $path && isHome != true)    )  ][0]{    _id,    title,    seoTitle,    description,    path,    isHome,    language,    sections[]{      _key,      _type,      content,      attribution,      title,      left,      right    },    "translations": *[_type == "translation.metadata" && references(^._id)][0]      .translations[]{        language,        "page": value->{          _id,          title,          path,          isHome,          language        }      }  }
+// Query: *[    _type == "page" &&    language == $lang &&    (      ($path == "" && isHome == true) ||      ($path != "" && path == $path && isHome != true)    )  ][0]{    _id,    title,    seoTitle,    description,    path,    isHome,    language,    sections[]{      _key,      _type,      content,      attribution,      title,      left,      right,      images[]{        _key,        asset,        hotspot,        crop,        alt,        caption      },      gallery->{        _id,        title,        images[]{          _key,          asset,          hotspot,          crop,          alt,          caption        }      },      "videoUrl": file.asset->url,      poster,      caption,      alt,      autoplay,      muted,      video->{        _id,        title,        "videoUrl": file.asset->url,        poster,        caption,        alt,        autoplay,        muted      }    },    "translations": *[_type == "translation.metadata" && references(^._id)][0]      .translations[]{        language,        "page": value->{          _id,          title,          path,          isHome,          language        }      }  }
 export type PageByPathQueryResult = {
   _id: string;
   title: string | null;
@@ -611,6 +746,40 @@ export type PageByPathQueryResult = {
         title: string | null;
         left: null;
         right: null;
+        images: null;
+        gallery: null;
+        videoUrl: null;
+        poster: null;
+        caption: null;
+        alt: null;
+        autoplay: null;
+        muted: null;
+        video: null;
+      }
+    | {
+        _key: string;
+        _type: "gallerySection";
+        content: null;
+        attribution: null;
+        title: null;
+        left: null;
+        right: null;
+        images: Array<{
+          _key: string;
+          asset: SanityImageAssetReference | null;
+          hotspot: SanityImageHotspot | null;
+          crop: SanityImageCrop | null;
+          alt: string | null;
+          caption: string | null;
+        }> | null;
+        gallery: null;
+        videoUrl: null;
+        poster: null;
+        caption: null;
+        alt: null;
+        autoplay: null;
+        muted: null;
+        video: null;
       }
     | {
         _key: string;
@@ -620,6 +789,77 @@ export type PageByPathQueryResult = {
         title: null;
         left: null;
         right: null;
+        images: null;
+        gallery: null;
+        videoUrl: null;
+        poster: null;
+        caption: null;
+        alt: null;
+        autoplay: null;
+        muted: null;
+        video: null;
+      }
+    | {
+        _key: string;
+        _type: "sharedGallerySection";
+        content: null;
+        attribution: null;
+        title: null;
+        left: null;
+        right: null;
+        images: null;
+        gallery: {
+          _id: string;
+          title: string | null;
+          images: Array<{
+            _key: string;
+            asset: SanityImageAssetReference | null;
+            hotspot: SanityImageHotspot | null;
+            crop: SanityImageCrop | null;
+            alt: LocaleString | null;
+            caption: LocaleString | null;
+          }> | null;
+        } | null;
+        videoUrl: null;
+        poster: null;
+        caption: null;
+        alt: null;
+        autoplay: null;
+        muted: null;
+        video: null;
+      }
+    | {
+        _key: string;
+        _type: "sharedVideoSection";
+        content: null;
+        attribution: null;
+        title: null;
+        left: null;
+        right: null;
+        images: null;
+        gallery: null;
+        videoUrl: null;
+        poster: null;
+        caption: null;
+        alt: null;
+        autoplay: null;
+        muted: null;
+        video: {
+          _id: string;
+          title: string | null;
+          videoUrl: string | null;
+          poster: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          caption: LocaleString | null;
+          alt: LocaleString | null;
+          autoplay: boolean | null;
+          muted: boolean | null;
+        } | null;
       }
     | {
         _key: string;
@@ -629,6 +869,15 @@ export type PageByPathQueryResult = {
         title: null;
         left: null;
         right: null;
+        images: null;
+        gallery: null;
+        videoUrl: null;
+        poster: null;
+        caption: null;
+        alt: null;
+        autoplay: null;
+        muted: null;
+        video: null;
       }
     | {
         _key: string;
@@ -638,6 +887,39 @@ export type PageByPathQueryResult = {
         title: null;
         left: SectionContent | null;
         right: SectionContent | null;
+        images: null;
+        gallery: null;
+        videoUrl: null;
+        poster: null;
+        caption: null;
+        alt: null;
+        autoplay: null;
+        muted: null;
+        video: null;
+      }
+    | {
+        _key: string;
+        _type: "videoSection";
+        content: null;
+        attribution: null;
+        title: null;
+        left: null;
+        right: null;
+        images: null;
+        gallery: null;
+        videoUrl: string | null;
+        poster: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        } | null;
+        caption: string | null;
+        alt: string | null;
+        autoplay: boolean | null;
+        muted: boolean | null;
+        video: null;
       }
   > | null;
   translations: Array<{
@@ -659,6 +941,6 @@ declare module "@sanity/client" {
     '\n  *[_type == "metadata" && language == $lang][0]\n': MetadataQueryResult;
     '\n  *[_type == "page" && defined(language)]{\n    language,\n    path,\n    isHome\n  }\n': PathsQueryResult;
     '\n  *[_type == "page" && language == $lang] | order(isHome desc, path asc) {\n    _id,\n    title,\n    path,\n    isHome,\n    language\n  }\n': AllPagesQueryResult;
-    '\n  *[\n    _type == "page" &&\n    language == $lang &&\n    (\n      ($path == "" && isHome == true) ||\n      ($path != "" && path == $path && isHome != true)\n    )\n  ][0]{\n    _id,\n    title,\n    seoTitle,\n    description,\n    path,\n    isHome,\n    language,\n    sections[]{\n      _key,\n      _type,\n      content,\n      attribution,\n      title,\n      left,\n      right\n    },\n    "translations": *[_type == "translation.metadata" && references(^._id)][0]\n      .translations[]{\n        language,\n        "page": value->{\n          _id,\n          title,\n          path,\n          isHome,\n          language\n        }\n      }\n  }\n': PageByPathQueryResult;
+    '\n  *[\n    _type == "page" &&\n    language == $lang &&\n    (\n      ($path == "" && isHome == true) ||\n      ($path != "" && path == $path && isHome != true)\n    )\n  ][0]{\n    _id,\n    title,\n    seoTitle,\n    description,\n    path,\n    isHome,\n    language,\n    sections[]{\n      _key,\n      _type,\n      content,\n      attribution,\n      title,\n      left,\n      right,\n      images[]{\n        _key,\n        asset,\n        hotspot,\n        crop,\n        alt,\n        caption\n      },\n      gallery->{\n        _id,\n        title,\n        images[]{\n          _key,\n          asset,\n          hotspot,\n          crop,\n          alt,\n          caption\n        }\n      },\n      "videoUrl": file.asset->url,\n      poster,\n      caption,\n      alt,\n      autoplay,\n      muted,\n      video->{\n        _id,\n        title,\n        "videoUrl": file.asset->url,\n        poster,\n        caption,\n        alt,\n        autoplay,\n        muted\n      }\n    },\n    "translations": *[_type == "translation.metadata" && references(^._id)][0]\n      .translations[]{\n        language,\n        "page": value->{\n          _id,\n          title,\n          path,\n          isHome,\n          language\n        }\n      }\n  }\n': PageByPathQueryResult;
   }
 }

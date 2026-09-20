@@ -22,6 +22,36 @@ export const allPagesQuery = groq`
   }
 `;
 
+/** Portable Text in sections: expand shared image/video refs for rendering. */
+const sectionContentProjection = groq`
+  []{
+    ...,
+    _type == "imageRef" => {
+      ...,
+      image->{
+        _id,
+        title,
+        image,
+        alt,
+        caption
+      }
+    },
+    _type == "videoRef" => {
+      ...,
+      video->{
+        _id,
+        title,
+        "videoUrl": file.asset->url,
+        poster,
+        caption,
+        alt,
+        autoplay,
+        muted
+      }
+    }
+  }
+`;
+
 export const pageByPathQuery = groq`
   *[
     _type == "page" &&
@@ -41,11 +71,47 @@ export const pageByPathQuery = groq`
     sections[]{
       _key,
       _type,
-      content,
+      content${sectionContentProjection},
       attribution,
       title,
-      left,
-      right
+      left${sectionContentProjection},
+      right${sectionContentProjection},
+      images[]{
+        _key,
+        asset,
+        hotspot,
+        crop,
+        alt,
+        caption
+      },
+      gallery->{
+        _id,
+        title,
+        images[]{
+          _key,
+          asset,
+          hotspot,
+          crop,
+          alt,
+          caption
+        }
+      },
+      "videoUrl": file.asset->url,
+      poster,
+      caption,
+      alt,
+      autoplay,
+      muted,
+      video->{
+        _id,
+        title,
+        "videoUrl": file.asset->url,
+        poster,
+        caption,
+        alt,
+        autoplay,
+        muted
+      }
     },
     "translations": *[_type == "translation.metadata" && references(^._id)][0]
       .translations[]{

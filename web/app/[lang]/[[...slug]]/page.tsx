@@ -128,7 +128,7 @@ export default async function Page({
         )}
       </header>
 
-      {page.sections && <SectionRenderer sections={page.sections} />}
+      {page.sections && <SectionRenderer sections={page.sections} lang={lang} />}
     </article>
   );
 }
