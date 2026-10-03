@@ -1,6 +1,6 @@
 import type { PageSection } from "./SectionRenderer";
 import SectionShell from "./SectionShell";
-import ImageGallery from "../portable-text/block-components/image-gallery/ImageGallery";
+import ImageGallery from "../gallery/ImageGallery";
 
 type Props = {
   section: Extract<PageSection, { _type: "gallerySection" }>;

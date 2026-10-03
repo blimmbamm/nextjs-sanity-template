@@ -1,14 +1,14 @@
 import useEmblaCarousel from "embla-carousel-react";
-import { ImageGalleryImageType } from "../../src/types";
+import type { GalleryImage } from "../../src/types";
 import usePrevNextImage from "./usePrevNextImage";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./ImageCarousel.module.css";
 import { useEffect, useState } from "react";
 
 type Props = {
-  images?: ImageGalleryImageType[];
-  src: (img: ImageGalleryImageType) => string;
-  onClickImage?: (img: ImageGalleryImageType) => void;
+  images?: GalleryImage[];
+  src: (img: GalleryImage) => string;
+  onClickImage?: (img: GalleryImage) => void;
   dragFree?: boolean;
   startIndex?: number;
   showCaption?: boolean;

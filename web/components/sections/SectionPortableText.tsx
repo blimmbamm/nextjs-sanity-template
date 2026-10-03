@@ -3,14 +3,23 @@ import {
   PortableTextMarkComponentProps,
   PortableTextTypeComponentProps,
 } from 'next-sanity'
-import {ImageRef, Link, SectionContent, VideoRef} from '../../src/sanity/types'
+import {Link, PageByPathQueryResult} from '../../src/sanity/types'
 import {urlFor} from '../../src/sanity/sanityImageUrl'
 import {resolveLocaleString} from '../../src/sanity/resolveLocaleString'
 import VideoPlayer from './VideoPlayer'
 import styles from './SectionPortableText.module.css'
 
+type PageSection = NonNullable<NonNullable<PageByPathQueryResult>['sections']>[number]
+
+/** Section content as returned by `pageByPathQuery` (refs expanded). */
+type ProjectedSectionContent = NonNullable<
+  Extract<PageSection, {_type: 'textSection'}>['content']
+>
+type ProjectedImageRef = Extract<ProjectedSectionContent[number], {_type: 'imageRef'}>
+type ProjectedVideoRef = Extract<ProjectedSectionContent[number], {_type: 'videoRef'}>
+
 type Props = {
-  content: SectionContent | null | undefined
+  content: ProjectedSectionContent | null | undefined
   lang: string
 }
 
@@ -36,7 +45,7 @@ export default function SectionPortableText({content, lang}: Props) {
           normal: ({children}) => <p className={styles.paragraph}>{children}</p>,
         },
         types: {
-          imageRef: ({value}: PortableTextTypeComponentProps<ImageRef>) => {
+          imageRef: ({value}: PortableTextTypeComponentProps<ProjectedImageRef>) => {
             const image = value.image?.image
             if (!image?.asset) {
               return null
@@ -57,7 +66,7 @@ export default function SectionPortableText({content, lang}: Props) {
               </figure>
             )
           },
-          videoRef: ({value}: PortableTextTypeComponentProps<VideoRef>) => {
+          videoRef: ({value}: PortableTextTypeComponentProps<ProjectedVideoRef>) => {
             const video = value.video
             if (!video?.videoUrl) {
               return null

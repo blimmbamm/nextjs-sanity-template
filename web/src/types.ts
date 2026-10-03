@@ -2,10 +2,7 @@ import {
   SanityImageAssetReference,
   SanityImageCrop,
   SanityImageHotspot,
-  SectionContent,
 } from "./sanity/types";
-
-export type PageContent = SectionContent;
 
 /**
  * Shape shared by inline gallery images (`gallerySection`) and by images
@@ -21,8 +18,3 @@ export type GalleryImage = {
   alt?: string | null;
   caption?: string | null;
 };
-
-export type ImageGalleryImageType = GalleryImage;
-
-export type VideoBlock = Extract<SectionContent[number], { _type: "videoRef" }>;
-export type ImagesType = Extract<SectionContent[number], { _type: "imageRef" }>;

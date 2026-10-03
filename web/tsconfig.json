@@ -30,12 +30,6 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": [
-    "node_modules",
-    "components/footer",
-    "components/image-carousel",
-    "components/navigation",
-    "components/portable-text/block-components",
-    "components/portable-text/renderer"
-  ]
+  "exclude": ["node_modules"]
 }
+
