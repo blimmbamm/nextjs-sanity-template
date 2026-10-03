@@ -49,3 +49,19 @@ cd e2e && npm install && npx playwright install chromium && npm test
 ```
 
 GitHub Actions: [`.github/workflows/e2e-web.yml`](.github/workflows/e2e-web.yml). Configure repository variables for the Sanity project ID before expecting the suite to run on `web/`/`e2e/` changes.
+
+## Dependency updates (Renovate)
+
+[`renovate.json`](renovate.json) configures [Renovate](https://docs.renovatebot.com/) for all packages (`web`, `cms`, `docs`, `e2e`):
+
+- **Patch / minor** — auto-merged when status checks are green
+- **Major** — PR only; merge manually after review
+- **Dependency Dashboard** — GitHub issue listing pending / deferred updates
+
+**One-time setup per GitHub repo** (template and each customer fork):
+
+1. Install the [Mend Renovate GitHub App](https://github.com/apps/renovate) on the repository
+2. In **Settings → General → Pull Requests**, enable **Allow auto-merge**
+3. Prefer a branch protection rule on `main` with required status checks (e.g. `e2e`) so auto-merge waits for CI
+
+Vercel deploys follow the merge to `main`. Hosted Studio still needs `cd cms && npm run deploy` after CMS dependency changes.
