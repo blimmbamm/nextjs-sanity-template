@@ -11,7 +11,9 @@
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
     "typegen": "sanity schema extract && sanity typegen generate",
-    "sync:prod-to-dev": "sanity dataset export production tmp.tar.gz && sanity dataset import tmp.tar.gz development --replace"
+    "dataset:create-development": "sanity dataset create development",
+    "sync:prod-to-dev": "node scripts/sync-dataset.mjs prod-to-dev",
+    "sync:dev-to-prod": "node scripts/sync-dataset.mjs dev-to-prod"
   },
   "keywords": [
     "sanity"

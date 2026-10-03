@@ -74,7 +74,5 @@ Legende: `[ ]` offen · `[~]` teilweise
 
 - [ ] Skill bauen, der durch die Erstellung eines neuen Projekts auf Basis des Templates führt
 - [ ] Umgang mit Vulnerabilities festlegen (npm audit, Dependabot/Renovate, regelmäßige Updates)
-- [~] Sanity-Datasets: Rollen klar (production = live, development = Arbeit); `sync:prod-to-dev` prüfen; ggf. `dev→prod` klären
-- [ ] Template-seitig: Setup-Skript (Vercel-/Sanity-CLI) + Deployment-Checkliste als Doku
 - [ ] Probleme im docs-Projekt konkretisieren und beheben
 - [ ] Im Studio ein „Hilfe“-Tool anlegen, das auf die gehostete Doku verlinkt

@@ -6,9 +6,13 @@ Schema sources: `schemaTypes/`.
 
 ## Setup
 
+A new Sanity project starts with a single dataset named **`production`**. This template expects a second dataset **`development`** for local work.
+
 ```bash
 cp .env.example .env
+# Set SANITY_STUDIO_PROJECT_ID (and keep SANITY_STUDIO_DATASET=development)
 npm install
+npm run dataset:create-development   # once per new Sanity project
 npm run dev
 ```
 
@@ -32,7 +36,18 @@ Open [http://localhost:3333](http://localhost:3333).
 | `npm run build` | Production Studio build |
 | `npm run deploy` | Deploy Studio to Sanity hosting |
 | `npm run typegen` | Extract schema + generate TypeScript types for `web/` |
-| `npm run sync:prod-to-dev` | Replace `development` with a copy of `production` |
+| `npm run dataset:create-development` | Create the empty `development` dataset (cold start for local work) |
+| `npm run sync:prod-to-dev` | Replace `development` with a copy of `production` (asks `y/N` first) |
+| `npm run sync:dev-to-prod` | Replace `production` with a copy of `development` (asks `y/N` first) |
+
+### Datasets
+
+| Dataset | Role |
+| --- | --- |
+| `development` | Local Studio + local Next.js. Create once with `npm run dataset:create-development`. |
+| `production` | Created by Sanity with the project. Used by the live site and hosted Studio. |
+
+Sync commands export the source dataset, import it into the target with `--replace`, then delete the temporary archive. Both directions prompt for confirmation in the terminal (`y` / `yes` to proceed; anything else aborts). `sync:dev-to-prod` prints an extra warning because it overwrites live content.
 
 After schema or GROQ query changes in `web/src/sanity/queries.ts`:
 

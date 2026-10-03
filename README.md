@@ -26,7 +26,7 @@ cd web && cp .env.example .env && npm install && npm run dev
 cd docs && npm install && npm run dev
 ```
 
-Point `cms` and `web` at the same Sanity project. Prefer the `development` dataset locally; use `production` for live builds and the hosted Studio.
+Point `cms` and `web` at the same Sanity project. A new Sanity project only has `production` — create `development` once from `cms/` with `npm run dataset:create-development`, then use that dataset locally. Use `production` for live builds and the hosted Studio. See [`cms/README.md`](cms/README.md) for dataset sync scripts.
 
 After schema or GROQ query changes, regenerate types from `cms/`:
 
