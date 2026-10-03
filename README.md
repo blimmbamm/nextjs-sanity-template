@@ -11,7 +11,7 @@ Starter for a bilingual Sanity + Next.js site, with operator docs and E2E smoke 
 | [`docs/`](docs/) | Astro Starlight | Operator guide (German skeleton) |
 | [`e2e/`](e2e/) | Playwright | Smoke tests for `web/` |
 
-Each package has its own `package.json` and README (where present).
+Each package has its own `package.json` and README. CMS component catalog: [`cms/README.md`](cms/README.md).
 
 ## Local development
 
@@ -28,7 +28,11 @@ cd docs && npm install && npm run dev
 
 Point `cms` and `web` at the same Sanity project. Prefer the `development` dataset locally; use `production` for live builds and the hosted Studio.
 
-After schema or GROQ query changes, regenerate types from `cms/` (see `cms/README.md` if present).
+After schema or GROQ query changes, regenerate types from `cms/`:
+
+```bash
+cd cms && npm run typegen
+```
 
 ## Deploy (overview)
 

@@ -1,6 +1,6 @@
 # E2E
 
-Smoke tests for the Next.js site in `../web`, run with Playwright against a production build (`next build` + `next start`).
+Smoke tests for the Next.js site in [`../web`](../web/), run with Playwright against a production build (`next build` + `next start`).
 
 ## Setup
 
@@ -19,6 +19,10 @@ The build needs Sanity public env vars (`NEXT_PUBLIC_SANITY_PROJECT_ID`, dataset
 | `npm run test:ui` | Same, with the Playwright UI |
 
 If `web` is already running on port 3000 locally, Playwright reuses that server (skipping the build). Prefer a production server (`npm run build && npm run start` in `web/`) when testing locally.
+
+## Tests
+
+Specs live in `tests/`. Keep them as high-level smoke checks (home loads, basic routing), not full editorial coverage.
 
 ## CI
 

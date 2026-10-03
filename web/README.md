@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Web (Next.js)
 
-## Getting Started
+Public bilingual website. Pages are fully static (`dynamic = "error"`, `revalidate = false`) and rendered from Sanity at build time.
 
-First, run the development server:
+## Setup
 
 ```bash
+cp .env.example .env
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Use the same Sanity project/dataset as `cms/.env`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL (metadata, alternates) |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity project ID |
+| `NEXT_PUBLIC_SANITY_DATASET` | Dataset (`development` locally; `production` for live builds) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Optional in CI / some layouts: `NEXT_PUBLIC_SITE_NAME` (display name).
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Dev server |
+| `npm run build` | Production build (fetches Sanity at build time) |
+| `npm run start` | Serve the production build |
+| `npm run lint` | ESLint |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Path | Role |
+| --- | --- |
+| `app/[lang]/[[...slug]]/` | Locale + path routing (`/de`, `/en/about`, …) |
+| `components/` | UI, including section renderers |
+| `src/sanity/` | Client, GROQ queries, generated types |
+| `src/routing/` | Lang validation and URL helpers |
 
-## Deploy on Vercel
+Content is modelled as **pages → sections** in Sanity. After schema or query changes, regenerate types from `cms/`:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+cd ../cms && npm run typegen
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy
+
+Deploy as a separate Vercel project with **Root Directory** = `web`. Set the public env vars above to the `production` dataset and the live site URL.
+
+Smoke tests live in [`../e2e`](../e2e/).
