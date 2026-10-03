@@ -20,7 +20,6 @@
   ],
   "dependencies": {
     "@sanity/document-internationalization": "^6.2.33",
-    "@sanity/export": "^6.0.5",
     "@sanity/vision": "^5.31.2",
     "react": "^19.1",
     "react-dom": "^19.1",
@@ -28,12 +27,19 @@
     "styled-components": "^6.1.18"
   },
   "overrides": {
-    "adm-zip": "^0.6.0",
+    "adm-zip": "^0.6.1",
+    "brace-expansion@1": "^1.1.21",
+    "brace-expansion@5": "^5.0.12",
+    "dompurify": "^3.4.16",
     "esbuild": "^0.28.1",
-    "js-yaml": "^3.15.1",
+    "js-yaml@3": "^3.15.2",
+    "js-yaml@4": "^4.3.2",
+    "markdown-it": "^14.3.1",
     "typeid-js": {
       "uuid": "^11.1.1"
-    }
+    },
+    "undici@6": "^6.29.0",
+    "undici@7": "^7.30.0"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^5.0.2",

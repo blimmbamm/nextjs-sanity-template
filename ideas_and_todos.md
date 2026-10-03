@@ -76,4 +76,7 @@ Legende: `[ ]` offen · `[~]` teilweise
 - [x] Umgang mit Vulnerabilities festlegen — Renovate (`renovate.json`): patch/minor auto-merge, majors manuell; App + Allow auto-merge pro Repo nötig
 - [ ] Probleme im docs-Projekt konkretisieren und beheben
 - [ ] Im Studio ein „Hilfe“-Tool anlegen, das auf die gehostete Doku verlinkt
-- einmal npm audit für alle projekte machen, dieser prozess sollte in den skill aufgenommen werden
+- [~] npm audit durchführen — Fixables erledigt; Rest ohne Upstream-Patch (`braces`, `http-cache-semantics`); Prozess in Skill aufnehmen
+- für das template den e2e check rausnehmen/deaktivieren
+- [x] Dependencies auf Verwendung prüfen — ungenutzt: `@sanity/export` (cms) entfernt; `embla-carousel` (web) als direkte Dep ergänzt
+- 
