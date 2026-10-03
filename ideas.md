@@ -184,3 +184,6 @@ page
 - KI beschreiben lassen in docs, wie sich das template zusammensetzt
 - einen skill machen, der ein neues projekt auf basis des Templates erstellt
 - Beispielhaftes responsive design
+- alles entfernen was nicht gebraucht wird, vor allem auch in der next app (portable text renderer)
+- typegen überbleibsel wegmachen
+- doku hier in template aufnehmen

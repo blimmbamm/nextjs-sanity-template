@@ -1,0 +1,18 @@
+---
+title: Website selbst pflegen
+description: Kurzanleitung für die Pflege der Website mit dem Content Studio.
+template: splash
+hero:
+  tagline: Texte, Bilder und Einstellungen änderst du selbst im Content Studio. Ergänze hier die projektspezifische Anleitung.
+  actions:
+    - text: Los geht's
+      link: /einstieg/ueberblick/
+      icon: right-arrow
+---
+
+import { LinkButton } from '@astrojs/starlight/components';
+import { project } from '~/project.config';
+
+<LinkButton href={project.studioUrl} variant="secondary" icon="external">
+	Content Studio öffnen
+</LinkButton>
